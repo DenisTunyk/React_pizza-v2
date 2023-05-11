@@ -2,24 +2,24 @@ import { Header } from './Header/Header';
 import { Categories } from './Categories/Categories';
 import { Sort } from './Sort/Sort';
 import { PizzaBlock } from './PizzaBlock/PizzaBlock';
+import Pizza from '../assets/pizza.json';
 
 export const App = () => {
+  console.log(Pizza);
   return (
-    <div class="wrapper">
+    <div className="wrapper">
       <Header />
-      <div class="content">
-        <div class="container">
-          <div class="content__top">
+      <div className="content">
+        <div className="container">
+          <div className="content__top">
             <Categories />
             <Sort />
           </div>
-          <h2 class="content__title">Все пиццы</h2>
-          <div class="content__items">
-            <PizzaBlock title="Мексиканская" price={500} />
-            <PizzaBlock title="Мексиканская" price={333} />
-            <PizzaBlock title="Мексиканская" price={111} />
-            <PizzaBlock title="Мексиканская" price={888} />
-            <PizzaBlock title="Мексиканская" price={999} />
+          <h2 className="content__title">Все пиццы</h2>
+          <div className="content__items">
+            {Pizza.map(obj => (
+              <PizzaBlock key={obj.id} {...obj} />
+            ))}
           </div>
         </div>
       </div>
