@@ -1,0 +1,28 @@
+.root {
+  li {
+    display: inline-block;
+  }
+
+  a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border: solid 1px #fe5f1f;
+    border-radius: 30px;
+    margin-right: 10px;
+
+    cursor: pointer;
+    color: #fe5f1f;
+
+    padding: 10px;
+
+    &:hover,
+    &:focus {
+      background: #fe5f1f;
+
+      color: #fff;
+    }
+  }
+}
