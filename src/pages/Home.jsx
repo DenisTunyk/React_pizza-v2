@@ -8,6 +8,8 @@ import Sceleton from '../components/PizzaBlock/Sceleton';
 export const Home = () => {
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [categoryId, setCategoryId] = React.useState(0);
+  //const [sortType, setSortType] = React.useState(0);
 
   React.useEffect(() => {
     fetch('https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza')
@@ -21,7 +23,10 @@ export const Home = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories />
+        <Categories
+          value={categoryId}
+          onClickCategory={id => setCategoryId(id)}
+        />
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
