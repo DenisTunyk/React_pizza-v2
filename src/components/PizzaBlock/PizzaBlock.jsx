@@ -1,6 +1,7 @@
 import React from 'react';
+import imageUrl from '../../assets/img/pizza.jpg';
 
-export const PizzaBlock = ({ title, price, imageUrl, types, sizes }) => {
+export const PizzaBlock = ({ title, price, types, sizes }) => {
   const [typeActive, setTypeActive] = React.useState(0);
   const [sizeActive, setSizeActive] = React.useState(0);
   const type = ['тонкое', 'традиционное'];
