@@ -5,21 +5,29 @@ import { PizzaBlock } from '../components/PizzaBlock/PizzaBlock';
 import { Sort } from '../components/Sort/Sort';
 import Sceleton from '../components/PizzaBlock/Sceleton';
 import { Pagination } from '../components/Pagination/Pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategoryId } from '../redux/slices/filterSlice';
 
 export const Home = ({ searchValue }) => {
+  const dispatch = useDispatch();
+  const categoryId = useSelector(state => state.filterReduce.categoryId);
+  const sortType = useSelector(state => state.filterReduce.sort);
+
+  console.log(sortType);
+
+  const onChangeCategory = id => {
+    dispatch(setCategoryId(id));
+  };
+
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [categoryId, setCategoryId] = React.useState(0);
+  //const [categoryId, setCategoryId] = React.useState(0);
   const [curentPage, setCurentPage] = React.useState(1);
-  const [sortType, setSortType] = React.useState({
-    name: 'популярности',
-    sort: 'rating',
-  });
 
   React.useEffect(() => {
     setIsLoading(true);
-    const order = sortType.sort.includes('-') ? 'ask' : 'desc';
-    const sortBy = sortType.sort.replace('-', '');
+    const order = sortType.sortProperty.includes('-') ? 'ask' : 'desc';
+    const sortBy = sortType.sortProperty.replace('-', '');
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     fetch(
       `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${curentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
@@ -53,11 +61,8 @@ export const Home = ({ searchValue }) => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories
-          value={categoryId}
-          onClickCategory={id => setCategoryId(id)}
-        />
-        <Sort value={sortType} onClickType={type => setSortType(type)} />
+        <Categories value={categoryId} onClickCategory={onChangeCategory} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? scelletons : pizzas}</div>
