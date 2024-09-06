@@ -1,9 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Search.module.scss';
+import debounce from 'lodash.debounce';
 import { SearchContext } from 'components/App';
+import { useRef, useCallback } from 'react';
 
 export const Search = () => {
+  const [value, setValue] = useState('');
   const { searchValue, setSearchValue } = React.useContext(SearchContext);
+
+  const refInput = useRef();
+
+  // будет создаваться при первом вызове и при рендери новая создаваться не будет.
+  const testDebounce = useCallback(
+    debounce(str => {
+      console.log(str);
+      setSearchValue(str);
+      console.log(searchValue);
+    }, 1000),
+    []
+  );
+
+  const onClickClear = () => {
+    setSearchValue('');
+    setValue('');
+    refInput.current.focus();
+  };
+
+  const onChangeInput = e => {
+    setValue(e.target.value);
+    testDebounce(e.target.value);
+  };
+
   return (
     <div className={styles.root}>
       <svg className={styles.icon} viewBox="0 0 50 50">
@@ -20,14 +47,15 @@ export const Search = () => {
       </svg>
 
       <input
-        value={searchValue}
-        onChange={e => setSearchValue(e.target.value)}
+        ref={refInput}
+        value={value}
+        onChange={onChangeInput}
         className={styles.input}
         placeholder="Поиск пиццы..."
       />
-      {searchValue && (
+      {value && (
         <svg
-          onClick={() => setSearchValue('')}
+          onClick={onClickClear}
           className={styles.delete}
           id="Layer_1"
           viewBox="0 0 512 512"

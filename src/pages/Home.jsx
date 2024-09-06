@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import { Categories } from '../components/Categories/Categories';
 import { PizzaBlock } from '../components/PizzaBlock/PizzaBlock';
@@ -12,8 +13,6 @@ export const Home = ({ searchValue }) => {
   const dispatch = useDispatch();
   const categoryId = useSelector(state => state.filterReduce.categoryId);
   const sortType = useSelector(state => state.filterReduce.sort);
-
-  console.log(sortType);
 
   const onChangeCategory = id => {
     dispatch(setCategoryId(id));
@@ -29,14 +28,29 @@ export const Home = ({ searchValue }) => {
     const order = sortType.sortProperty.includes('-') ? 'ask' : 'desc';
     const sortBy = sortType.sortProperty.replace('-', '');
     const category = categoryId > 0 ? `category=${categoryId}` : '';
-    fetch(
-      `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${curentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
-    )
-      .then(res => res.json())
-      .then(arr => {
-        setItems(arr);
+    const search = searchValue ? `&search=${searchValue}` : '';
+    console.log(search);
+    // Запрос через fetch
+    // fetch(
+    //   `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${curentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
+    // )
+    //   .then(res => res.json())
+    //   .then(arr => {
+    //     setItems(arr);
+    //     setIsLoading(false);
+    //   });
+
+    //Запрос через axios
+    axios
+      .get(
+        `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${curentPage}&limit=8&${category}&sortBy=${sortBy}&order=${order}${search}`
+      )
+      .then(res => {
+        console.log(res);
+        setItems(res.data);
         setIsLoading(false);
       });
+
     window.scrollTo(0, 0);
   }, [categoryId, sortType, curentPage]);
 
