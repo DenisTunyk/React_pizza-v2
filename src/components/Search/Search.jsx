@@ -6,19 +6,27 @@ import { useRef, useCallback } from 'react';
 
 export const Search = () => {
   const [value, setValue] = useState('');
-  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const { setSearchValue } = React.useContext(SearchContext);
 
   const refInput = useRef();
 
-  // будет создаваться при первом вызове и при рендери новая создаваться не будет.
+  //будет создаваться при первом вызове и при рендери новая создаваться не будет.
   const testDebounce = useCallback(
     debounce(str => {
-      console.log(str);
       setSearchValue(str);
-      console.log(searchValue);
     }, 1000),
-    []
+    [setSearchValue]
   );
+
+  // React.useEffect(() => {
+  //   return () => {
+  //     testDebounce.cancel(); // Отменяем debounced функцию при размонтировании компонента
+  //   };
+  // }, [testDebounce]);
+
+  // const testDebounce = debounce(str => {
+  //   setSearchValue(str);
+  // }, 2000);
 
   const onClickClear = () => {
     setSearchValue('');
