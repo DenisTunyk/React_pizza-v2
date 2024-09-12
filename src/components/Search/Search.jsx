@@ -2,31 +2,22 @@ import React, { useState } from 'react';
 import styles from './Search.module.scss';
 import debounce from 'lodash.debounce';
 import { SearchContext } from 'components/App';
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useMemo, useContext } from 'react';
 
 export const Search = () => {
   const [value, setValue] = useState('');
-  const { setSearchValue } = React.useContext(SearchContext);
+  const { setSearchValue } = useContext(SearchContext);
 
   const refInput = useRef();
 
   //будет создаваться при первом вызове и при рендери новая создаваться не будет.
-  const testDebounce = useCallback(
-    debounce(str => {
-      setSearchValue(str);
-    }, 1000),
+  const debounsedSearch = useMemo(
+    () =>
+      debounce(val => {
+        setSearchValue(val);
+      }, 500),
     [setSearchValue]
   );
-
-  // React.useEffect(() => {
-  //   return () => {
-  //     testDebounce.cancel(); // Отменяем debounced функцию при размонтировании компонента
-  //   };
-  // }, [testDebounce]);
-
-  // const testDebounce = debounce(str => {
-  //   setSearchValue(str);
-  // }, 2000);
 
   const onClickClear = () => {
     setSearchValue('');
@@ -34,10 +25,13 @@ export const Search = () => {
     refInput.current.focus();
   };
 
-  const onChangeInput = e => {
-    setValue(e.target.value);
-    testDebounce(e.target.value);
-  };
+  const onChangeInput = useCallback(
+    e => {
+      debounsedSearch(e.target.value);
+      setValue(e.target.value);
+    },
+    [setValue, debounsedSearch]
+  );
 
   return (
     <div className={styles.root}>

@@ -43,39 +43,6 @@ export const Home = () => {
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const fetchPizzas = () => {
-    setIsLoading(true);
-    const order = sortType.sortProperty.includes('-') ? 'ask' : 'desc';
-    const sortBy = sortType.sortProperty.replace('-', '');
-    const category = categoryId > 0 ? `category=${categoryId}` : '';
-    const search = searchValue ? `&search=${searchValue}` : '';
-    // console.log('SearchValue = ', searchValue);
-    // console.log('search = ', search);
-    // Запрос через fetch
-    // fetch(
-    //   `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${curentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
-    // )
-    //   .then(res => res.json())
-    //   .then(arr => {
-    //     setItems(arr);
-    //     setIsLoading(false);
-    //   });
-
-    //Запрос через axios
-    // console.log(
-    //   `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${currentPage}&limit=8&${category}&sortBy=${sortBy}&order=${order}${search}`
-    // );
-    axios
-      .get(
-        `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${currentPage}&limit=8&${category}&sortBy=${sortBy}&order=${order}${search}`
-      )
-      .then(res => {
-        console.log(res);
-        setItems(res.data);
-        setIsLoading(false);
-      });
-  };
-
   //Если был первый рендер, то проверяем запросы qwery
   useEffect(() => {
     if (window.location.search) {
@@ -84,14 +51,27 @@ export const Home = () => {
       dispatch(setFilters({ ...params, sort }));
       isSearch.current = true;
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!isSearch.current) {
-      fetchPizzas();
+      setIsLoading(true);
+      const order = sortType.sortProperty.includes('-') ? 'ask' : 'desc';
+      const sortBy = sortType.sortProperty.replace('-', '');
+      const category = categoryId > 0 ? `category=${categoryId}` : '';
+      const search = searchValue ? `&search=${searchValue}` : '';
+      axios
+        .get(
+          `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${currentPage}&limit=8&${category}&sortBy=${sortBy}&order=${order}${search}`
+        )
+        .then(res => {
+          console.log(res);
+          setItems(res.data);
+          setIsLoading(false);
+        });
     }
     isSearch.current = false;
+    window.scrollTo(0, 0);
   }, [categoryId, sortType.sortProperty, currentPage, searchValue]);
 
   useEffect(() => {
