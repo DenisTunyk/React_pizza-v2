@@ -65,7 +65,7 @@ export const Home = () => {
           `https://640734a477c1a905a0f16e16.mockapi.io/api/v1/pizza?page=${currentPage}&limit=8&${category}&sortBy=${sortBy}&order=${order}${search}`
         )
         .then(res => {
-          console.log(res);
+          //console.log(res);
           setItems(res.data);
           setIsLoading(false);
         });

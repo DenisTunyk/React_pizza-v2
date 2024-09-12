@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import imageUrl from '../../assets/img/pizza.jpg';
+import { useDispatch } from 'react-redux';
+import { addItem } from '../../redux/slices/cartSlice';
 
-export const PizzaBlock = ({ title, price, types, sizes }) => {
-  const [typeActive, setTypeActive] = React.useState(0);
-  const [sizeActive, setSizeActive] = React.useState(0);
-  const type = ['тонкое', 'традиционное'];
+export const PizzaBlock = ({ id, title, price, types, sizes }) => {
+  const dispatch = useDispatch();
+
+  const [typeActive, setTypeActive] = useState(0);
+  const [sizeActive, setSizeActive] = useState(0);
+  const typeNames = ['тонкое', 'традиционное'];
+
+  const onClickAdd = () => {
+    const item = {
+      id,
+      title,
+      price,
+      imageUrl,
+      type: typeNames[typeActive],
+      size: sizeActive,
+    };
+    dispatch(addItem(item));
+  };
 
   return (
     <div className="pizza-block-wrapper">
@@ -19,7 +35,7 @@ export const PizzaBlock = ({ title, price, types, sizes }) => {
                 onClick={() => setTypeActive(index)}
                 className={typeActive === index ? 'active' : ''}
               >
-                {type[index]}
+                {typeNames[index]}
               </li>
             ))}
           </ul>
@@ -51,8 +67,8 @@ export const PizzaBlock = ({ title, price, types, sizes }) => {
                 fill="white"
               />
             </svg>
-            <span>Добавить</span>
-            <i>2</i>
+            <span onClick={onClickAdd}>Добавить</span>
+            <i>1</i>
           </div>
         </div>
       </div>
